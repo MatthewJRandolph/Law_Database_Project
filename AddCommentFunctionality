@@ -1,0 +1,47 @@
+import java.sql.Timestamp;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class AddCommentFunctionality {
+    public void addComment(Connection connection) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter the User ID: ");
+        int userId = scanner.nextInt();
+
+        System.out.println("Enter the Law ID: ");
+        int lawId = scanner.nextInt();
+
+        System.out.println("Enter the comment text: ");
+        scanner.nextLine(); // Consume the newline character left by nextInt()
+        String commentText = scanner.nextLine();
+
+        // Get the current timestamp
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        try {
+            String sql = "INSERT INTO Comment (c_userid, c_lawid, c_commenttext, c_timestamp) VALUES (?, ?, ?, ?)";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, lawId);
+            preparedStatement.setString(3, commentText);
+            preparedStatement.setTimestamp(4, timestamp);
+
+            int rowsInserted = preparedStatement.executeUpdate();
+
+            if (rowsInserted > 0) {
+                System.out.println("Comment added successfully!");
+            } else {
+                System.out.println("Comment could not be added.");
+            }
+
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+}
