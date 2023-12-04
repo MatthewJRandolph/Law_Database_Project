@@ -1,0 +1,33 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class AddCategoryFunctionality {
+    public void addCategory(Connection connection) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter the name of the category: ");
+        String categoryName = scanner.nextLine();
+
+        try {
+            String sql = "INSERT INTO Category (c_categoryname) VALUES (?)";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, categoryName);
+
+            int rowsInserted = preparedStatement.executeUpdate();
+
+            if (rowsInserted > 0) {
+                System.out.println("Category added successfully!");
+            } else {
+                System.out.println("Category could not be added.");
+            }
+
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+}
